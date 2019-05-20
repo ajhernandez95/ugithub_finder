@@ -1,8 +1,13 @@
-// const http = new EasyHTTP();
+const notFound = () => {
+  const container = document.querySelector('.searchContainer');
+  const search = document.querySelector('.search');
 
-// http
-//   .get("https://api.github.com/users/ajhernandez95")
-//   .then(data => {
+  const alert = document.createElement('div');
+  alert.innerText = 'Sorry user is not found';
+  alert.className = 'alert alert-danger';
 
-//   })
-//   .catch(err => console.log(err));
+  container.insertBefore(alert, search);
+  setTimeout(() => {
+    alert.style.display = 'none';
+  }, 3000);
+};
