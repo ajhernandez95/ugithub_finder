@@ -1,72 +1,6 @@
-const github = new Github();
-
-const notFound = () => {
-  const container = document.querySelector(".searchContainer");
-  const search = document.querySelector(".search");
-
-  const alert = document.createElement("div");
-  alert.innerText = "Sorry user is not found";
-  alert.className = "alert alert-danger";
-
-  container.insertBefore(alert, search);
-  setTimeout(() => {
-    alert.style.display = "none";
-  }, 3000);
-};
-
-const userFound = user => {
-  github.getUser(user).then(data => {
-    const profile = document.getElementById("profile");
-    const followers = data.profile.followers_url;
-    console.log(followers);
-    profile.innerHTML = `
-    <div class="card card-body">
-    <div class="row">
-      <div class="col-md-3">
-        <img
-          src="${data.profile.avatar_url}"
-          class="img-fluid mb-3"
-          alt=""
-        />
-        <a href="${
-          data.profile.html_url
-        }" class="btn btn-primary btn-block" target="_blank">View Profile</a>
-      </div>
-      <div
-        class="col-md-9
-         "
-      >
-        <div class="badge badge-primary">Public Repos: ${
-          data.profile.public_repos
-        }</div>
-        <div class="badge badge-secondary">Public Gists: ${
-          data.profile.public_gists
-        }</div>
-        <div class="badge badge-success">Followers: ${
-          data.profile.followers
-        }</div>
-        <div class="badge badge-info">Following: ${data.profile.following}</div>
-        <br />
-        <br />
-        <div class="list-group">
-          <div class="list-group-item">company: ${data.profile.company}</div>
-          <div class="list-group-item">Website/Blog: ${data.profile.blog}</div>
-          <div class="list-group-item">Location: ${data.profile.location}</div>
-          <div class="list-group-item">
-            Member Since: ${data.profile.created_at}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-    `;
-    console.log(data);
-  });
-};
-
 class UI {
   constructor() {
-    this.profile = document.getElementById("profile");
+    this.profile = document.getElementById('profile');
   }
   showProfile(user) {
     this.profile.innerHTML = `
@@ -76,7 +10,7 @@ class UI {
             <img class='img-fluid mb-3' src="${user.avatar_url}">
             <a href="${
               user.html_url
-            }" target="_blank" class="btn btn-primary btn-block">View Profile</a>
+            }" target="_blank" class="btn btn-primary btn-block mb-3">View Profile</a>
           </div>
           <div class='col-md-9'>
             <span class="badge badge-primary">Public Repos: ${
@@ -88,7 +22,7 @@ class UI {
             <span class="badge badge-success">Followers: ${
               user.followers
             }</span>
-            <span class="badge badge-primary">Following Repos: ${
+            <span class="badge badge-primary">Following: ${
               user.following
             }</span>
             <br>
@@ -106,7 +40,55 @@ class UI {
       <div id="repos"></div>
     `;
   }
+
+  showRepos(repos) {
+    console.log(repos);
+    repos.forEach(repo => {
+      document.getElementById('repos').innerHTML += `
+      <div class='card card-body mb-2'>
+        <div class='row'>
+          <div class='col-md-6'>
+          <a href='${repo.html_url}' target='_blank'>${repo.name}</a>
+          </div>
+          <div class='col-md-6'>
+          <span class='badge badge-primary'>Stars: ${
+            repo.stargazers_count
+          }</span>
+          <span class='badge badge-secondary'>Watchers: ${
+            repo.watchers_count
+          }</span>
+          <span class='badge badge-info'>Forks: ${repo.forks_count}</span>
+          </div>
+        </div>
+      </div>
+      `;
+    });
+  }
+
+  showAlert(msg, className) {
+    this.clearAlert();
+    const container = document.querySelector('.searchContainer');
+    const search = document.querySelector('.search');
+
+    const alert = document.createElement('div');
+    alert.innerText = msg;
+    alert.className = className;
+
+    container.insertBefore(alert, search);
+
+    setTimeout(() => {
+      this.clearAlert();
+    }, 3000);
+  }
+
+  clearAlert() {
+    const currentAlert = document.querySelector('.alert');
+    if (currentAlert) {
+      currentAlert.remove();
+    }
+  }
+
   clearProfile() {
-    this.profile.innerHTML = "";
+    this.profile.innerHTML = '';
   }
 }
